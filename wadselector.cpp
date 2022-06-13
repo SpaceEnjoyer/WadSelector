@@ -182,9 +182,10 @@ void WadSelector::OnIniSet()
     if(iniFile.section('/', -1).toStdString() != "gzdoom.ini"){
         QMessageBox::warning( this, tr("Warning"), tr("Filename is not 'gzdoom.ini'.\nGZDoom will not read this!") );
     }
-
-    ui->IniPathBox->setText(iniFile);
-    pathToIni = ui->IniPathBox->text();
+    else{
+        ui->IniPathBox->setText(iniFile);
+        pathToIni = ui->IniPathBox->text();
+    }
 
     QFile defaultPaths(defaults);
     defaultPaths.open(QFile::ReadOnly);
