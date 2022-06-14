@@ -14,7 +14,7 @@ WadSelector::WadSelector(QWidget *parent)
 {
     setWindowTitle("Wad Selector");
     ui->setupUi(this);
-    defaults = defaults + "/.config/WadSelectorDefaults.txt";
+    defaults = defaults + "/.config/wadsel_def.txt";
     QFile defaultPaths(defaults);
 
     if(!defaultPaths.exists() || defaultPaths.size() == 0){
