@@ -14,6 +14,7 @@ WadSelector::WadSelector(QWidget *parent)
 {
     setWindowTitle("Wad Selector");
     ui->setupUi(this);
+        
     defaults = defaults + "/.config/wadsel_def.txt";
     QFile defaultPaths(defaults);
 
@@ -55,8 +56,7 @@ void WadSelector::grabWads(){
     directory.setNameFilters(filters);
     fileList = directory.entryInfoList();
 
-    for (int i=0; i<fileList.size(); i++)
-    {
+    for (int i=0; i<fileList.size(); i++){
         ui->listWidget->addItem(fileList.at(i).fileName());
         ui->listWidget->item(i)->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
         if(readAddedWads(ui->listWidget->item(i)->text()))
@@ -80,8 +80,7 @@ void WadSelector::addToIni(QString pathToIni, QString pathToWads){
     if(iniFile.isOpen()){
         read = in.readLine();
 
-        while(read != AUTOLOAD)
-        {
+        while(read != AUTOLOAD){
             temp = temp + read + "\n";
             read = in.readLine();
         }
@@ -94,13 +93,13 @@ void WadSelector::addToIni(QString pathToIni, QString pathToWads){
         std::cerr<<"ERROR: File could not be opened\n";
 
     for(int i=0; i<selected.size(); i++){
+        
         if(pathToWads[pathToWads.length()-1] != "/")    //In case the user omits '/'
-            temp = temp + "Path=" + pathToWads + "/"+ selected[i] + "\n";   //no need to add '\' before spaces because gzdoom can parse whitespaces
+            temp = temp + "Path=" + pathToWads + "/"+ selected[i] + "\n";   //no need to add '\' before whitespaces because gzdoom doesn't care about them
         else
             temp = temp + "Path=" + pathToWads + selected[i] + "\n";
     }
-
-    temp = "\n\n" + temp + ENDREAD + "\n";
+    temp = temp + ENDREAD + "\n";
 
     while(!in.atEnd()){
         read = in.readLine();
@@ -109,7 +108,6 @@ void WadSelector::addToIni(QString pathToIni, QString pathToWads){
 
     iniFile.close();
     iniFile.open(QFile::ReadWrite | QFile::Truncate);
-    temp = temp.section('\n',2);        //Bruteforced it because everytime it finishes adding the mods it also adds 2 newlines on top of the file, annoying
     in << temp;
 
     iniFile.close();
@@ -123,9 +121,11 @@ bool WadSelector::readAddedWads(QString toBeChecked){
 
     if(ini.isOpen()){
         line = in.readLine();
+        
         while(line != AUTOLOAD){
             line = in.readLine();
         }
+        
         while(line != ENDREAD){
             line = in.readLine();
             if(line.section('/', -1) == toBeChecked)
@@ -142,9 +142,10 @@ bool WadSelector::readAddedWads(QString toBeChecked){
 
 void WadSelector::OnWadLoad()
 {
-    selected.clear();   //avoids duplicate lines in the ini if "load" button is clicked multiple times
+    selected.clear();   //avoids duplicate lines in the ini if "load" button is clicked multiple times in a row
 
     for(int i=0; i<fileList.size(); i++){
+        
         if(ui->listWidget->item(i)->checkState() == 2){
             selected.push_back(ui->listWidget->item(i)->text());
         }
@@ -158,7 +159,7 @@ void WadSelector::OnWadSet()
     QString WadsDir = QFileDialog::getExistingDirectory(this, tr("Select Wads folder"), "/home", QFileDialog::ShowDirsOnly| QFileDialog::DontResolveSymlinks);
     ui->WadPathBox->setText(WadsDir);
     pathToWads = ui->WadPathBox->text();
-
+    
     QFile defaultPaths(defaults);
     defaultPaths.open(QFile::ReadOnly);
     QTextStream f(&defaultPaths);
