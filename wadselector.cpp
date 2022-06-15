@@ -185,17 +185,17 @@ void WadSelector::OnIniSet()
     else{
         ui->IniPathBox->setText(iniFile);
         pathToIni = ui->IniPathBox->text();
+        
+        QFile defaultPaths(defaults);
+        defaultPaths.open(QFile::ReadOnly);
+        QTextStream f(&defaultPaths);
+        QString read;
+        read = f.readLine() + "\n";
+        read = read + iniFile;
+        defaultPaths.close();
+        defaultPaths.open(QFile::WriteOnly | QFile::Truncate);
+        std::cout<<"read: "<<read.toStdString()<<"\n\n";
+        f << read;
+        defaultPaths.close();
     }
-
-    QFile defaultPaths(defaults);
-    defaultPaths.open(QFile::ReadOnly);
-    QTextStream f(&defaultPaths);
-    QString read;
-    read = f.readLine() + "\n";
-    read = read + iniFile;
-    defaultPaths.close();
-    defaultPaths.open(QFile::WriteOnly | QFile::Truncate);
-    std::cout<<"read: "<<read.toStdString()<<"\n\n";
-    f << read;
-    defaultPaths.close();
 }
